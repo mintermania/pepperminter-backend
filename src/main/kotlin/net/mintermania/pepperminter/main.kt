@@ -23,6 +23,7 @@ import java.sql.DriverManager
 import java.util.*
 import kotlin.text.Charsets.UTF_8
 
+
 // @backend based on Kotlin & SparkJava was powered by MinterMania (mpay.ms) for Minter Twitter challenge 2019
 // v: 1.7
 //TODO: types and just more cool features
@@ -95,6 +96,29 @@ create table transactions
 //        println("grumpy/homePage: " + prefs.node("grumpy").get("homePage", null))
 
         val http: Http = ignite()
+
+        fun fixdemo(response: spark.Response, request: spark.Request) {
+            response.header("Access-Control-Allow-Origin", "*")
+
+            val accessControlRequestHeaders = request
+                .headers("Access-Control-Request-Headers")
+            if (accessControlRequestHeaders != null) {
+                response.header(
+                    "Access-Control-Allow-Headers",
+                    accessControlRequestHeaders
+                )
+            }
+
+            val accessControlRequestMethod = request
+                .headers("Access-Control-Request-Method")
+            if (accessControlRequestMethod != null) {
+                response.header(
+                    "Access-Control-Allow-Methods",
+                    accessControlRequestMethod
+                )
+            }
+        }
+
         http.port(config!!.node("general").getInt("port", 7777))
 
         http.get("/stop") {
@@ -108,6 +132,10 @@ create table transactions
 
         // order = old | new
         http.get("/tweets") {
+
+            fixdemo(response, request)
+
+
             response.type("application/json;charset=utf-8")
 
             // false = old

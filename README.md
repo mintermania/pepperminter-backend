@@ -29,4 +29,3 @@ For now there are two endoints for our API:
  
 ## LICENSE
 MIT
-****
