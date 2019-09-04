@@ -17,7 +17,7 @@ class Config {
     fun create() {
 
         val sqls = """
-            create table profiles
+create table profiles
 (
     address     VARCHAR(42)
         constraint profiles_pk
