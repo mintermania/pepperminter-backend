@@ -85,17 +85,24 @@ class BipLive(data: JsonObject) {
                     + " ping</a>"
         )
 //    m.append("   ") formatting below is shit, sorry
-        URL(
-            "https://api.telegram.org/bot" + config!!.node("telegram").get(
-                "bot_token",
-                ""
-            ) + "/sendMessage?chat_id=" + config!!.node("telegram").get(
-                "channel_id",
-                ""
-            ) + "&parse_mode=HTML&disable_web_page_preview=true&text=" + URLEncoder.encode(
-                m.toString(), Charsets.UTF_8
-            )
-        ).readText()
+
+        try {
+            URL(
+                "https://api.telegram.org/bot" + config!!.node("telegram").get(
+                    "bot_token",
+                    ""
+                ) + "/sendMessage?chat_id=" + config!!.node("telegram").get(
+                    "channel_id",
+                    ""
+                ) + "&parse_mode=HTML&disable_web_page_preview=true&text=" + URLEncoder.encode(
+                    m.toString(), Charsets.UTF_8
+                )
+            ).readText()
+        }   catch (e: Exception) {
+            println("biplive exception")
+//        e.printStackTrace()
+    }
+
     }
 
 }

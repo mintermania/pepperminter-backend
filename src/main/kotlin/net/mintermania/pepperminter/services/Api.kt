@@ -19,27 +19,27 @@ class Api {
     fun run() {
         val http: Http = ignite()
 
-//        fun fixdemo(response: spark.Response, request: spark.Request) {
-//            response.header("Access-Control-Allow-Origin", "*")
-//
-//            val accessControlRequestHeaders = request
-//                .headers("Access-Control-Request-Headers")
-//            if (accessControlRequestHeaders != null) {
-//                response.header(
-//                    "Access-Control-Allow-Headers",
-//                    accessControlRequestHeaders
-//                )
-//            }
-//
-//            val accessControlRequestMethod = request
-//                .headers("Access-Control-Request-Method")
-//            if (accessControlRequestMethod != null) {
-//                response.header(
-//                    "Access-Control-Allow-Methods",
-//                    accessControlRequestMethod
-//                )
-//            }
-//        }
+        fun fixdemo(response: spark.Response, request: spark.Request) {
+            response.header("Access-Control-Allow-Origin", "*")
+
+            val accessControlRequestHeaders = request
+                .headers("Access-Control-Request-Headers")
+            if (accessControlRequestHeaders != null) {
+                response.header(
+                    "Access-Control-Allow-Headers",
+                    accessControlRequestHeaders
+                )
+            }
+
+            val accessControlRequestMethod = request
+                .headers("Access-Control-Request-Method")
+            if (accessControlRequestMethod != null) {
+                response.header(
+                    "Access-Control-Allow-Methods",
+                    accessControlRequestMethod
+                )
+            }
+        }
 
         http.port(config!!.node("general").getInt("port", 7777))
 
@@ -67,7 +67,7 @@ class Api {
         // order = old | new
         http.get("/tweets") {
 
-            //            fixdemo(response, request)
+            fixdemo(response, request)
 
 
             response.type("application/json;charset=utf-8")
@@ -169,6 +169,10 @@ class Api {
         }
 
         http.get("/profile") {
+
+            fixdemo(response, request)
+
+
             response.type("application/json;charset=utf-8")
 
             val address: String? = if (request.queryParams("address") != null) request.queryParams("address") else null
