@@ -17,6 +17,7 @@ import java.util.*
 
 class Api {
     fun run() {
+
         val http: Http = ignite()
 
         fun fixdemo(response: spark.Response, request: spark.Request) {
@@ -42,6 +43,15 @@ class Api {
         }
 
         http.port(config!!.node("general").getInt("port", 7777))
+
+        fun comments(from: String, nonce: Int): Int {
+            val data =
+                db.prepareStatement("SELECT COUNT() FROM transactions WHERE a_to = '$from' AND type = 'comment' AND type_special = '$nonce'")
+                    .executeQuery()
+            data.next()
+            return data.getInt(1)
+        }
+
 
         http.get("/stop") {
             if (request.host().split(":")[0] != request.ip())
@@ -101,6 +111,7 @@ class Api {
                     .select { e -> e.hash..e.block..e.a_from..e.a_to..e.amount..e.payload..e.date..e.nonce }
                     .toString(SQLiteDialect)
             )
+
             val data = q.executeQuery()
 
             val arr = ArrayList<TreeMap<String, Any>>()
@@ -123,6 +134,9 @@ class Api {
                 map["payload"] = data.getString("payload").dec()
                 map["date"] = data.getString("date")
                 map["nonce"] = data.getInt("nonce")
+
+                map["comments"] = comments(data.getString("a_from"), data.getInt("nonce"))
+
 
                 profiles.add(map["from"] as String)
                 profiles.add(map["to"] as String)
