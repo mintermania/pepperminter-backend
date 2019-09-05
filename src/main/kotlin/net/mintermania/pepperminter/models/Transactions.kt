@@ -37,7 +37,10 @@ object Transactions : Table("transactions") {
         var type = "tweet"
         var type_special: String? = null
 
-        if (payload.startsWith("-----BEGIN PUBLIC KEY-----") && payload.endsWith("-----END PUBLIC KEY-----")) {
+        if (payload.startsWith("-PEPPER-COMMENT-")) {
+            type = "comment"
+            type_special = payload.split(" ")[1]
+        } else if (payload.startsWith("-----BEGIN PUBLIC KEY-----") && payload.endsWith("-----END PUBLIC KEY-----")) {
             type = "publickey"
 //            if (payload.contains("-----BEGIN PRIVATE ENCRYPTED KEY-----") && payload.contains("-----END PRIVATE ENCRYPTED KEY-----"))
 //                type = "keys"

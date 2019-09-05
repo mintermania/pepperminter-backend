@@ -6,7 +6,6 @@ import net.mintermania.pepperminter.db
 import net.mintermania.pepperminter.dec
 import net.mintermania.pepperminter.models.Profiles
 import tel.egram.kuery.eq
-import tel.egram.kuery.or
 import tel.egram.kuery.rangeTo
 import tel.egram.kuery.sqlite.SQLiteDialect
 import java.math.BigInteger
@@ -18,9 +17,16 @@ class BipLive(data: JsonObject) {
     init {
         val from = data["from"].asString
         val to = data["data"].asJsonObject["to"].asString
-        val res =
+        val res1 =
             db.prepareStatement(
-                tel.egram.kuery.from((Profiles)).where { e -> (e.address eq from) or (e.address eq to) }.select { e -> e.title..e.fish..e.www..e.isVerified }.toString(
+                tel.egram.kuery.from((Profiles)).where { e -> (e.address eq from) }.select { e -> e.title..e.fish..e.www..e.isVerified }.toString(
+                    SQLiteDialect
+                )
+            )
+                .executeQuery()
+        val res2 =
+            db.prepareStatement(
+                tel.egram.kuery.from((Profiles)).where { e -> (e.address eq to) }.select { e -> e.title..e.fish..e.www..e.isVerified }.toString(
                     SQLiteDialect
                 )
             )
@@ -29,20 +35,20 @@ class BipLive(data: JsonObject) {
         val pfrom: Map<String, Any>?
         val pto: Map<String, Any>?
 
-        res.next()
+        res1.next()
         pfrom = mapOf(
-            "title" to res.getString("title"),
-            "fish" to res.getString("fish"),
-            "www" to res.getString("www"),
-            "isVerified" to res.getBoolean("isVerified")
+            "title" to res1.getString("title"),
+            "fish" to res1.getString("fish"),
+            "www" to res1.getString("www"),
+            "isVerified" to res1.getBoolean("isVerified")
         ) //TODO: just to make code better for reading / working with ide need to make it via Profiles/Transactions.*
 
-        pto = if (res.next())
+        pto = if (res2.next())
             mapOf(
-                "title" to res.getString("title"),
-                "fish" to res.getString("fish"),
-                "www" to res.getString("www"),
-                "isVerified" to res.getBoolean("isVerified")
+                "title" to res2.getString("title"),
+                "fish" to res2.getString("fish"),
+                "www" to res2.getString("www"),
+                "isVerified" to res2.getBoolean("isVerified")
             )
         else
             pfrom
@@ -98,10 +104,10 @@ class BipLive(data: JsonObject) {
                     m.toString(), Charsets.UTF_8
                 )
             ).readText()
-        }   catch (e: Exception) {
+        } catch (e: Exception) {
             println("biplive exception")
 //        e.printStackTrace()
-    }
+        }
 
     }
 
