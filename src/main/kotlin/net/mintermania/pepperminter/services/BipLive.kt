@@ -12,9 +12,21 @@ import java.math.BigInteger
 import java.net.URL
 import java.net.URLEncoder
 
-class BipLive(data: JsonObject) {
+class BipLive(val data: JsonObject) {
 
-    init {
+    fun run() {
+        val payload = data["payload"].asString.dec()
+
+        if (payload.startsWith("-PEPPER-COMMENT-")) {
+            return
+        } else if (payload.startsWith("-PEPPER-DIRECT-")) {
+            return
+        } else if (payload.startsWith("-----BEGIN PUBLIC KEY-----") && payload.endsWith("-----END PUBLIC KEY-----")) {
+            return
+        } else if (payload.startsWith("-PEPPER-")) {
+            return
+        }
+
         val from = data["from"].asString
         val to = data["data"].asJsonObject["to"].asString
         val res1 =

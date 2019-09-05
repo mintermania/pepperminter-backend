@@ -73,6 +73,6 @@ object Transactions : Table("transactions") {
             Profiles.add(data["data"].asJsonObject["to"].asString)
 
         if (config!!.node("telegram").getBoolean("poster", false))
-            BipLive(data)
+            BipLive(data).run()
     }
 }
