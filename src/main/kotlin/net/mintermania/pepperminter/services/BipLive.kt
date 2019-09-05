@@ -17,9 +17,7 @@ class BipLive(val data: JsonObject) {
     fun run() {
         val payload = data["payload"].asString.dec()
 
-        if (payload.startsWith("-PEPPER-COMMENT-")) {
-            return
-        } else if (payload.startsWith("-PEPPER-DIRECT-")) {
+        if (payload.startsWith("-PEPPER-DIRECT-")) {
             return
         } else if (payload.startsWith("-----BEGIN PUBLIC KEY-----") && payload.endsWith("-----END PUBLIC KEY-----")) {
             return
@@ -97,7 +95,10 @@ class BipLive(val data: JsonObject) {
         m.append("\n\n" + data["payload"].asString.dec())
 
         m.append(
-            "\n\n<a href='https://minterscan.net/tx/Mt${(data["hash"].asString).toLowerCase()}'>" + data["data"].asJsonObject["value"].asBigInteger.divide(
+            "\n\n<a href='https://minterscan.net/tx/Mt${(data["hash"].asString.replace(
+                "Mt",
+                ""
+            )).toLowerCase()}'>" + data["data"].asJsonObject["value"].asBigInteger.divide(
                 BigInteger.valueOf(1000000000000000000)
             )
                     + " ping</a>"

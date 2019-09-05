@@ -39,7 +39,11 @@ object Transactions : Table("transactions") {
 
         if (payload.startsWith("-PEPPER-COMMENT-")) {
             type = "comment"
-            type_special = payload.split(" ")[1]
+            type_special = if (payload.contains("\n"))
+                payload.split("\n")[1]
+            else
+                payload.split(" ")[1]
+
         } else if (payload.startsWith("-PEPPER-DIRECT-")) {
             type = "direct"
 //            type_special = payload.split(" ")[1]
