@@ -7,6 +7,12 @@ class Syncer {
     suspend fun run() {
         val data = Minter.all()
 
-        for (d in data) Transactions.add(d.asJsonObject)
+        for (d in data) {
+            try {
+                Transactions.add(d.asJsonObject)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

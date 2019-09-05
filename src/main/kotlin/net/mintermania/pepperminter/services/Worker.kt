@@ -13,25 +13,29 @@ class Worker {
             Syncer().run()
         }
 
+
         var last = 0
         while (true) {
+            try {
+                val block = Minter.block()
 
-            val block = Minter.block()
+                if (block == last) {
+                    delay(1000)
+                    continue
+                }
 
-            if (block == last) {
+                last = block
+
+                val transactions = Minter.transactions(block)
+
+                for (t in transactions)
+                    Transactions.add(t as JsonObject, block)
+
+                println("[block] $block")
                 delay(1000)
-                continue
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            last = block
-
-            val transactions = Minter.transactions(block)
-
-            for (t in transactions)
-                Transactions.add(t as JsonObject, block)
-
-            println("[block] $block")
-            delay(1000)
         }
     }
 
