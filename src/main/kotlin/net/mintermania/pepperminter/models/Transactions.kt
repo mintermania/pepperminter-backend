@@ -51,7 +51,7 @@ object Transactions : Table("transactions") {
 //    else if(payload.startsWith("sca")) //TODO: finish this stuff
 
         val query = into(Transactions).insert { e ->
-            e.hash(data["hash"].asString)..
+            e.hash(data["hash"].asString.replace("Mt", "").toUpperCase())..
                     e.block(if (height == 0) data["height"].asInt else height)..
                     e.type(type)..
                     e.type_special(type_special)..
