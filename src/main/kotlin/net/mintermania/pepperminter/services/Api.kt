@@ -388,5 +388,110 @@ class Api {
             }
         }
 
+
+        http.get("/direct") {
+
+            fixdemo(response, request)
+
+
+            response.type("application/json;charset=utf-8")
+
+            // false = old
+            val newFirst = request.queryParams("first") != "old"
+            val needp: Boolean =
+                if (request.queryParams("profiles") != null) request.queryParams("profiles")!!.toBoolean() else true
+            //TODO: need make this cool and beautiful :) now it sucks
+            val onPage: Int = if (request.queryParams("on_page") != null) request.queryParams("on_page").toInt() else 50
+            val page: Int = if (request.queryParams("page") != null) request.queryParams("page").toInt() else 1
+            val from: String? = if (request.queryParams("from") != null) request.queryParams("from") else null
+            val to: String? = if (request.queryParams("to") != null) request.queryParams("to") else null
+            val block: Number =
+                if (request.queryParams("block") != null) request.queryParams("block").toInt() else Minter.block()
+
+            val q = db.prepareStatement(
+                from(Transactions)
+                    .where { e ->
+                        (if (from != null) e.a_from eq from else e.a_from ne "a") and
+                                (if (to != null) e.a_to eq to else e.a_to ne "b") and
+                                (e.block lt block) and
+                                (e.type eq "direct")
+                    }
+                    .orderBy { e -> (if (newFirst) e.block.desc else e.block.asc) }
+                    .limit { onPage + 1 }
+                    .offset { onPage * (page - 1) }
+                    .select { e -> e.hash..e.block..e.a_from..e.a_to..e.amount..e.payload..e.date..e.nonce }
+                    .toString(SQLiteDialect)
+            )
+
+            val data = q.executeQuery()
+
+            val arr = ArrayList<TreeMap<String, Any>>()
+
+            val profiles = mutableSetOf<String>()
+
+            var next = false
+            while (data.next()) {
+                if (data.row == onPage + 1) {
+                    next = true
+                    continue
+                }
+
+                val map = TreeMap<String, Any>()
+                map["hash"] = data.getString("hash")
+                map["block"] = data.getInt("block")
+                map["from"] = data.getString("a_from")
+                map["to"] = data.getString("a_to")
+                map["amount"] = data.getString("amount")
+                map["payload"] = data.getString("payload").dec()
+                map["date"] = data.getString("date")
+                map["nonce"] = data.getInt("nonce")
+
+                map["comments"] = comments(data.getString("a_from"), data.getInt("nonce"))
+
+
+                profiles.add(map["from"] as String)
+                profiles.add(map["to"] as String)
+
+                arr.add(map)
+            }
+
+            val general = TreeMap<String, Any>()
+
+            general["next"] = next
+            general["prev"] = page > 1
+            general["block"] = block
+            general["tweets"] = arr
+
+            if (needp) { // if we want to receive profiles
+                val arr2 = TreeMap<String, TreeMap<String, Any?>>()
+
+                val p =
+                    db.prepareStatement(
+                        "SELECT * FROM profiles WHERE address IN (${profiles.joinToString(
+                            separator = "','",
+                            prefix = "'",
+                            postfix = "'"
+                        )})"
+                    )
+                        .executeQuery()
+
+                while (p.next()) {
+                    val map = TreeMap<String, Any?>()
+                    map["description"] = p.getString("description")
+                    map["www"] = p.getString("www")
+                    map["icon"] = p.getString("icon")
+                    map["isVerified"] = p.getBoolean("isVerified")
+                    map["title"] = p.getString("title")
+                    map["fish"] = p.getString("fish")
+
+                    arr2[p.getString("address")] = map
+                }
+                general["profiles"] = arr2
+
+            }
+
+            Gson().toJson(general)
+        }
+
     }
 }

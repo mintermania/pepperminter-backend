@@ -40,6 +40,9 @@ object Transactions : Table("transactions") {
         if (payload.startsWith("-PEPPER-COMMENT-")) {
             type = "comment"
             type_special = payload.split(" ")[1]
+        } else if (payload.startsWith("-PEPPER-DIRECT-")) {
+            type = "direct"
+//            type_special = payload.split(" ")[1]
         } else if (payload.startsWith("-----BEGIN PUBLIC KEY-----") && payload.endsWith("-----END PUBLIC KEY-----")) {
             type = "publickey"
 //            if (payload.contains("-----BEGIN PRIVATE ENCRYPTED KEY-----") && payload.contains("-----END PRIVATE ENCRYPTED KEY-----"))
