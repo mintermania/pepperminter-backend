@@ -37,13 +37,13 @@ object Transactions : Table("transactions") {
         var type = "tweet"
         var type_special: String? = null
 
-        if (payload.startsWith("-----BEGIN PUBLIC KEY-----") && payload.endsWith("-----END PUBLIC KEY-----"))
+        if (payload.startsWith("-----BEGIN PUBLIC KEY-----") && payload.endsWith("-----END PUBLIC KEY-----")) {
             type = "publickey"
 //            if (payload.contains("-----BEGIN PRIVATE ENCRYPTED KEY-----") && payload.contains("-----END PRIVATE ENCRYPTED KEY-----"))
 //                type = "keys"
-        else if (payload.startsWith("- PEPPER -")) {
+        } else if (payload.startsWith("-PEPPER-")) {
             type = "privatekey"
-            type_special = payload.split("\n")[1].dec()
+//            type_special = payload.split("\n")[1].dec()
         }
 //    else if(payload.startsWith("sca")) //TODO: finish this stuff
 

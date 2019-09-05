@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.50</kotlin.version>
-        <kotlin.code.style>official</kotlin.code.style>
+        <kotlin.code.style>unofficial</kotlin.code.style>
         <junit.version>4.12</junit.version>
     </properties>
 
@@ -93,6 +93,13 @@
             <groupId>org.ini4j</groupId>
             <artifactId>ini4j</artifactId>
             <version>0.5.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.13</version>
         </dependency>
 
 

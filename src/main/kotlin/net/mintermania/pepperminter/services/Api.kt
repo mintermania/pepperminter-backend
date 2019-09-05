@@ -199,6 +199,23 @@ class Api {
                     arr["public"] = pubkey.getString("payload").dec()
                 }
 
+                val privatekey =
+                    db.prepareStatement(from(Transactions)
+                        .where { e -> (e.a_from eq address) and (e.type eq "privatekey") }
+                        .limit { 1 }
+                        .select { e -> e.payload }
+                        .toString(SQLiteDialect)
+                    ).executeQuery()
+
+                if (privatekey.next()) {
+//                    val keys = twokeys.getString(Transactions.payload.name).split("-----END PUBLIC KEY-----")
+//                    val public = keys[0] + "-----END PUBLIC KEY-----"
+//                    val private = keys[1]
+
+//                    println(keys)
+                    arr["private"] = privatekey.getString("payload").dec()
+                }
+
 //                else {
 //                    val pubkey =
 //                        db.prepareStatement(from(Transactions)

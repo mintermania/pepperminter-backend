@@ -25,6 +25,7 @@ fun String.enc(): String = Base64.getEncoder().encodeToString(this.toByteArray()
 var config: IniPreferences? = null
 
 fun main() {
+
     if (!File(Config().file).isFile)
         Config().create()
     else {
@@ -36,6 +37,49 @@ fun main() {
             Worker().run()
         }
     }
+
+//
+//    val hashedStr = String.format(
+//        "%032x",
+//        BigInteger(
+//            1,
+//            MessageDigest.getInstance("MD5").digest(
+//                "-----BEGIN PUBLIC KEY-----\nMIGJAoGBALCx9Zk4upPnwHQfqpIlkWFBdqLuWLt3eH9Nd3+k5hRRWceBmzh4NCxeQvkDAdrVjkpqAmGpu0kDslEFwEQ/cffeL9+2SjdUMc8Epo/5d+CbcHYYx5VStjAL0tChYqDJMBxo1XY8xoD1PPSx2/+o/WK6yKj1+rJNrzgPYF0K8ODlAgMBAAE=\n-----END PUBLIC KEY-----".toByteArray(
+//                    Charsets.UTF_8
+//                )
+//            )
+//        )
+//    )
+//
+//    val md5Hex = DigestUtils
+//        .md5Hex("-----BEGIN PUBLIC KEY-----\nMIGJAoGBALCx9Zk4upPnwHQfqpIlkWFBdqLuWLt3eH9Nd3+k5hRRWceBmzh4NCxeQvkDAdrVjkpqAmGpu0kDslEFwEQ/cffeL9+2SjdUMc8Epo/5d+CbcHYYx5VStjAL0tChYqDJMBxo1XY8xoD1PPSx2/+o/WK6yKj1+rJNrzgPYF0K8ODlAgMBAAE=\n-----END PUBLIC KEY-----")
+//
+//
+//    print(hashedStr)
+//    print("\n")
+//    print(md5Hex)
+//
+//    fun getMd5Base64(encTarget: ByteArray): String? {
+//        val mdEnc: MessageDigest?
+//        try {
+//            mdEnc = MessageDigest.getInstance("MD5")
+//            // Encryption algorithmy
+//            val md5Base16 = BigInteger(1, mdEnc.digest(encTarget))     // calculate md5 hash
+//            return Base64.getEncoder().encodeToString(md5Base16.toByteArray())
+//                .trim()     // convert from base16 to base64 and remove the new line character
+//        } catch (e: NoSuchAlgorithmException) {
+//            e.printStackTrace()
+//            return null
+//        }
+//    }
+//    print("\n")
+//    print(
+//        getMd5Base64(
+//            "-----BEGIN PUBLIC KEY-----\nMIGJAoGBALCx9Zk4upPnwHQfqpIlkWFBdqLuWLt3eH9Nd3+k5hRRWceBmzh4NCxeQvkDAdrVjkpqAmGpu0kDslEFwEQ/cffeL9+2SjdUMc8Epo/5d+CbcHYYx5VStjAL0tChYqDJMBxo1XY8xoD1PPSx2/+o/WK6yKj1+rJNrzgPYF0K8ODlAgMBAAE=\n-----END PUBLIC KEY-----".toByteArray(
+//                Charsets.UTF_8
+//            )
+//        )
+//    )
 
 //    //print(Base64.getDecoder().decode("SuD/8poH5f2bThSiFfKKxQ=="))
 //
