@@ -1,10 +1,12 @@
 # About
 This a backend side of project called Pepper Minter created by MinterMania and Minter Folio for Minter Twitter challenge 2019
-This is our frontend (flutter)
-This is our idea and todo list (ru)
 
-#How to run it
-In case you wanna run this app on your side, compile and run it by yourself via Maven or just download[ the latest jar file](https://github.com/mintermania/pepperminter-backend/tree/master/target " the latest jar file") (with dependencies) and run it (*java -jar file.jar*)!
+- This is our frontend (flutter)
+
+- [This is our idea and download links](https://docs.google.com/document/d/1ReU7fL2clpSLdgremfkacnJmEUQ0X1czJj-lHUqFSEA) (ru)
+
+# How to run it
+In case you wanna run this app on your side, compile and run it by yourself via Maven or just download [the latest jar file](https://github.com/mintermania/pepperminter-backend/tree/master/target) (one with dependencies) and run it (*java -jar file.jar*)!
 
 ## API
 This project is both API and implementation of biplive technology created using [Kotlin](https://kotlinlang.org/ "Kotlin") and [SparkJava](http://sparkjava.com/ "SparkJava")
